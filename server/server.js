@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize } = require('sequelize');
+const UserModel = require('./models/User');
 
 // Initialize Express
 const app = express();
@@ -9,6 +10,10 @@ const PORT = 3000;
 // Middleware
 app.use(bodyParser.json());
 
+
+// Serve static files
+app.use(express.static('public'));
+
 // Initialize Sequelize
 const sequelize = new Sequelize('database', 'username', 'password', {
   host: 'localhost',
@@ -16,18 +21,8 @@ const sequelize = new Sequelize('database', 'username', 'password', {
   storage: './database.sqlite', // Use SQLite for simplicity
 });
 
-// Define User model
-const User = sequelize.define('User', {
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-});
+// Import and Initialize User model
+const User = UserModel(sequelize);
 
 // REST Endpoints
 
